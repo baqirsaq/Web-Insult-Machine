@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital@0;1&family=Quicksand:wght@500&display=swap');
+
+
+.quicksand{
+    font-family: "Quicksand", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+html{
+    font-family: "Quicksand", sans-serif;
+}
+
+div {
+    width: 50%;
+    margin:auto;
+    text-align: center;
+}
+
+.button {
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-family: "Quicksand", sans-serif;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.theEnd {
+    background-color: black;
+}
+
+#endMessage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4em;
+    color: white; 
+    z-index: 10; 
+}
