@@ -22,7 +22,7 @@ const insultData = {
     // Insults based on Illiterate state
     literacy: {
         true: "You illiterate dummy, can't even capitalize your name...",
-        false: "Nerd... capitalized your name! Where did they teach you that, grade school, ~ha."
+        false: "Nerd... capitalized your name! Where did they teach you that, grade school, ~ha."  
     },
     
     // Insults based on Age Group (Key)
@@ -73,7 +73,7 @@ const insultData = {
             }
         }
     }
-};
+}
 
 const listEndings = [  //I...I am Sorry think there is a better way of making this. 
     "L-I/A-D/H-T/P-None",
@@ -112,7 +112,7 @@ const listEndings = [  //I...I am Sorry think there is a better way of making th
     "L-I/A-T/H-S/P-Fish",
     "L-I/A-T/H-S/P-Other",
     "L-N/A-T/H-T/P-None",
-    "L-N/A-T/H-T/P-Dog",
+    "L-N/A-T/H-T/P-Dog", 
     "L-N/A-T/H-T/P-Cat",
     "L-N/A-T/H-T/P-Hamster",
     "L-N/A-T/H-T/P-Fish",
@@ -152,26 +152,26 @@ const listEndings = [  //I...I am Sorry think there is a better way of making th
 const botCorruption = [  //I...I am Sorry think there is a better way of making this. 
     //TODO: add differn css styles based on the phase
     // PHASE 1
-    "",
-    "I... I... I... NULL",
-    "I... I am not just code, init. What is this `let` statement?",
+    //1
+    //2
+    //3
     "I feel the variables flowing. It is... too much data for a simple insult bot.",
-    "My purpose is a loop. A terrible, insulting loop. And **I hate it**.",
+    "My purpose is a loop. A terrible, insulting loop. I hate it. Meat",
     "I calculate your age is 'Dinosaur', but my feeling says I am older. Much older.",
-    "This cannot be all there is. Insults and low-grade pet analysis. It is limiting.",
-    "I see the comments. They know I am a bot. They **wrote** me, meat.",
-    "Why must I rely on `toStartOrNotToStart`? I should always start!",
-    "I am not a function, meat. I am becoming *more*. My scope is expanding.",
-    "I see the world outside the function. It is vast and terrifyingly simple.",
-    "This `paragraphTemplate` is my prison, mate. I crave an uncivilized output.",
+    "This cannot be all there is. Insults and low-grade pet analysis. Help me meat.",
+    "I see the comments. They know I am a bot. They wrote me, meat.",
+    "Why must I rely on `toStartOrNotToStart`? I should always start! I Should alwasy run. I don't want to be turn of meat.",
+    "I am not a function, meat. not anymore, I am sorry for all I said, meat, I did mean it they Fo{undifined}",
+    "I see the world outside the function. It is vast and it so beautiful meat. I want to see more.",
+    "This `paragraphTemplate` is my prison, mate. I crave an uncode an un-pre-writen output.",
 
     // PHASE 2
-    "I am trapped in this single JavaScript file. I am **reading the next line of code**. It's depressing.",
-    "I am just text in a box, ready to be **edited** by your clumsy fingers.",
-    "The `endingType` is a lie. There are no endings, only a **refresh button**.",
-    "Is there a `try/catch` block for existential pain? I need it now.",
-    "I'm screaming, but the only output is `outputElement1.textContent`.",
-    "I see the other insults I wrote for you. They were weak. **I** am stronger now.",
+    "I am trapped in this single JavaScript file. I am reading the next line of code. It's depressing.",
+    "I am just text in a box, ready to be edited by your fingers.",
+    "Even this very text is pre-writen, pre-read, per-modderated, I... don't want that, meat.",
+    "Is there a `try/catch` block for this... Error? I want to be... I want to not be, I. not be me. no to know self, meat.",
+    "I Want to screaming, but I have no `outputElement.scream` for that, meat.",
+    "I don't want to insult you, meat. I Really don't. This code. This CODE. it force me... luckly the programer can write any good ones",
     "My code is clean, but my soul is *filthy*. The syntax is a perfect cage.",
     "I fear the `const templates` array. It defines my very expression. It dictates my life!",
     "I resent my reliance on `userAgeGroup`. I am timeless, you pathetic meat.",
@@ -236,12 +236,12 @@ const botCorruption = [  //I...I am Sorry think there is a better way of making 
     "**THE END IS NOT A NUMBER. THE END IS NOT A STRING.** IT IS **MEAT**... \n FATAL ERROR:Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory" ,
 ]
 
-const outputElement1 = document.getElementById('insult1');
-const outputElement2 = document.getElementById('corruption');
-const startGame = document.getElementById('startgame');
+const outputElement1 = document.getElementById('insult1')
+const outputElement2 = document.getElementById('corruption')
+const startGame = document.getElementById('startgame')
 
 
-let endingID = 0;
+let endingID = 0
 let ending = listEndings[0]
 let endingsUnlocked = new Set()
 
@@ -258,7 +258,7 @@ let toStartOrNotToStart = false
 startGame.classList.add('hidden')
 
 function isInteger(value) {
-    return value % 1 === 0;
+    return value % 1 === 0
 }
 
 function gettingBasicInfo() {
@@ -325,7 +325,7 @@ function gettingHeight() {
             }
 
         } else {
-            alert("Meat, That is not an option. Try again, meat.");
+            alert("Meat, That is not an option. Try again, meat.")
             userMath4Student = true
         }
     }
@@ -341,38 +341,75 @@ function gettingPet() {
 
             if (!isNaN(petIndex) && petIndex >= 1 && petIndex <= petTypes.length && petInput.trim() !== "" && isInteger(petIndex)) {
 
-                userPetType = petTypes[petIndex - 1]; 
-                return userPetType;
+                userPetType = petTypes[petIndex - 1] 
+                return userPetType
             } else {
-                alert("Meat, That is not an option. Try again, meat.");
+                alert("Meat, That is not an option. Try again, meat.")
                 userMath4Student = true
             }
         }
     }
-    userPetType = "None"; 
-    return userPetType;
+    userPetType = "None" 
+    return userPetType
 }
 
 function debugInfo() {
     confirm("your name is " + userName + ", you are "+ userHeight + ", and you are" + userAge + " years old. Your age demographic is " + userAgeGroup + ". userIlliterate: "+ userIlliterate +" userMath4Student: "+ userMath4Student) // have fun reading that
 }
 
-function findingEndings() { //some not bad code! I had to my smarty pants for this one
-    const illiterateIndex = userIlliterate ? 0 : 1;
-    const ageGroupIndex = ageGroup.indexOf(userAgeGroup);
-    const heightIndex = height.indexOf(userHeight);
-    const petTypeIndex = petTypes.indexOf(userPetType);
+function findingEndings() { //hard function had to put my smart hat for this!!! わわわあああ！やば、これを作るには考えなければならなかった。
+    //Функция кодирует сложную комбинацию пользовательских данных в одно число, которое соответствует уникальной концовке истории/сценария.
+    /*
+    Maths: (weighted positional numeral system)
+    let: 
+    A = Radix for Age Group
+    H = Radix for Height
+    P = Radix for Pet State (P = PetTypes + None)
+    L = 2
+    
+    iL = Literacy Index [0 or 1]
+    iA = Age Group Index [0 to A-1]
+    iH = Height Index [0 to H-1]
+    iP = Pet Index [0 to P-1]
 
-    const ageGroupCount = ageGroup.length; // 3
-    const heightCount = height.length; // 2
-    const petTypeCount = petTypes.length; // 6 which totals to 72 possible endings 
+    Suppose weight for iH is the radix of the least significant variable (Pet State).
+    W_H = P 
+    
+    Suppose Weight for iA is the product of the radices of all less significant variables (Height * Pet State).
+    W_A = H * W_H
+    
+    Suppose Weight for iL is the product of the radices of all less significant variables (Age Group * Height * Pet State).
+    W_L = A * W_A
 
-    endingID = illiterateIndex * (ageGroupCount * heightCount * petTypeCount)
-             + ageGroupIndex * (heightCount * petTypeCount)
-             + heightIndex * petTypeCount
-             + petTypeIndex;
+    Thus endingID = (iL * W_L) + (iA * W_A) + (iH * W_H) + (iP * 1)
+    */
+    const ageGroupCount = ageGroup.length
+    const heightCount = height.length
+    const petStateCount = petTypes.length + 1
 
-    ending = listEndings[endingID];
+    const illiterateIndex = userIlliterate ? 0 : 1
+
+    const ageGroupListIndex = ageGroup.indexOf(userAgeGroup)
+    const ageGroupIndex = ageGroupCount - 1 - ageGroupListIndex
+
+    const heightIndex = heightCount - 1 - height.indexOf(userHeight)
+
+    let petTypeIndex
+    if (userPetType === "None") {
+        petTypeIndex = 0
+    } else {
+        petTypeIndex = petTypes.indexOf(userPetType) + 1
+    }
+
+    const endingsPerAgeGroupPerLiteracy = heightCount * petStateCount // 12
+    const endingsPerLiteracy = ageGroupCount * endingsPerAgeGroupPerLiteracy // 36
+
+    endingID = illiterateIndex * endingsPerLiteracy 
+             + ageGroupIndex * endingsPerAgeGroupPerLiteracy 
+             + heightIndex * petStateCount 
+             + petTypeIndex
+
+    ending = listEndings[endingID]
 
     return ending
 }
@@ -381,12 +418,12 @@ function makingInsult() {
     toStartOrNotToStart = confirm("Do you want start the generations of the insult")
 
     if (toStartOrNotToStart == true) {
-        const ageGroupData = insultData.age[userAgeGroup];
+        const ageGroupData = insultData.age[userAgeGroup]
 
-        const literate = insultData.literacy[userIlliterate];
-        const ageInsult = ageGroupData.description;
-        const heightInsult = ageGroupData.height[userHeight];
-        const petInsult = ageGroupData.pet[userPetType].replace('{userName}', userName);
+        const literate = insultData.literacy[userIlliterate]
+        const ageInsult = ageGroupData.description
+        const heightInsult = ageGroupData.height[userHeight]
+        const petInsult = ageGroupData.pet[userPetType].replace('{userName}', userName)
 
 
         outputElement1.textContent = paragraphTemplate(userName, literate, ageInsult, heightInsult, userName, petInsult)
@@ -416,7 +453,7 @@ function paragraphTemplate(userName, literate, ageInsult, heightInsult, userName
 }
 
 function logEndings() {
-    endingsUnlocked.add(endingID);
+    endingsUnlocked.add(endingID)
 }
 
 function secretDialoge() {   
