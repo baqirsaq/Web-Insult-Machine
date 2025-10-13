@@ -1,51 +1,129 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital@0;1&family=Quicksand:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&display=swap');
 
-
-.quicksand{
-    font-family: "Quicksand", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: normal;
+.atkinson-hyperlegible-mono {
+  font-family: "Atkinson Hyperlegible Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
-html{
-    font-family: "Quicksand", sans-serif;
+body {
+    /* Sleek, flat dark background */
+    background-color: #121212; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    /* Modern monospace font stack */
+    font-family: "Atkinson Hyperlegible Mono", monospace; 
+    color: #d4d4d4; /* Light gray text */
+    user-select: none;
+    overflow: hidden;
+    border-radius: 8px; /* Slight rounding for the whole body */
 }
 
-div {
-    width: 50%;
-    margin:auto;
-    text-align: center;
-}
+/* Container to simulate the 1280x720 window, centered and responsive */
+.terminal-window {
+    --terminal-width: 1280px;
+    --terminal-height: 720px;
+    width: min(90vw, var(--terminal-width));
+    height: min(calc(90vw * 0.5625), var(--terminal-height)); /* 720/1280 = 0.5625 */
+    max-width: var(--terminal-width);
+    max-height: var(--terminal-height);
 
-.button {
+    background-color: #1e1e1e; /* Soft dark terminal background */
     border: none;
-    color: white;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Modern soft shadow */
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+    font-size: 1.1rem; /* Slightly smaller, modern font size */
+    line-height: 1.4;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+    border-radius: 8px; /* Rounded corners for the terminal window */
+}
+
+/* Removed CRT/scanline effect */
+.terminal-window::before {
+    content: none;
+}
+
+/* The main output area for scrollable history */
+#output-area {
+    height: calc(100% - 3rem); /* Reserve space for the input line */
+    overflow-y: auto;
+    word-wrap: break-word;
+    padding-right: 15px; /* Prevent scrollbar from overlapping text */
+    white-space: pre-wrap; /* Preserve line breaks */
+    scrollbar-width: thin; /* Firefox */
+}
+
+/* Style for the input prompt line */
+#input-line {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* The blinking cursor - changed to a modern block cursor look */
+.cursor {
+    background-color: #d4d4d4; /* Light gray cursor */
+    width: 10px;
+    height: 1.1em;
     display: inline-block;
-    font-family: "Quicksand", sans-serif;
-    font-size: 16px;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
+    animation: blink 0.8s infinite;
+    margin-left: 2px;
+    vertical-align: middle;
 }
 
-.hidden {
-    display: none;
+@keyframes blink {
+    50% { opacity: 0; }
 }
 
-.theEnd {
-    background-color: black;
+/* Focus text to show where input goes - modern cyan/blue highlight */
+.focus-text {
+    color: #00FFFF; 
+    font-weight: bold;
 }
 
-#endMessage {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 4em;
-    color: white; 
-    z-index: 10; 
+/* Prompt prefix styling */
+#prompt-prefix {
+    color: #4EC9B0; /* Terminal green/cyan color */
+}
+
+/* Custom scrollbar styling for a modern look (Webkit) */
+#output-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+#output-area::-webkit-scrollbar-track {
+    background: #252526; /* Slightly lighter track than background */
+}
+
+#output-area::-webkit-scrollbar-thumb {
+    background: #555555;
+    border-radius: 4px;
+}
+
+#output-area::-webkit-scrollbar-thumb:hover {
+    background: #777777;
+}
+
+.highlight {
+        color: #dcdcaa; /* Yellow/Gold for highlights */
+}
+
+.error {
+    color: #F44747; /* Soft red for errors */
+}
+
+.title {
+    color: #9c4ec9; 
+    font-weight: bold;
 }
