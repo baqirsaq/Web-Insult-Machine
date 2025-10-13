@@ -1,5 +1,14 @@
+/*
+* =============================================================================
+*                     == 1. DOM Elements and Static Data ==
+* =============================================================================
+*/
+
+// DOM References
 const outputArea = document.getElementById('output-area')
 const currentCommandSpan = document.getElementById('current-command')
+
+// Static Data for User Options
 const petTypes = [
     "Dog",              //Why there are no static types!
     "Cat", 
@@ -19,22 +28,30 @@ const height = [
     "Tall",             
 ]
 
+// Core Data Structure for Generating Insults
+/* This MASSIVE object holds all the insult text, categorized by:
+    1. Illiteracy (case-sensitive name capitalization check)
+    2. Age Group (Dinosaur, PainToDealWith, Little)
+    3. Height (Tall, Short)
+    4. Pet Type (or None)
+*/
+//TODO: Also try puting it into a json
 const insultData = {
-    // Insults based on Illiterate state
+    // Insults based on Illiterate state (I)
     literacy: {
         true: "You illiterate dummy, can't even capitalize your name...",
         false: "Nerd... capitalized your name! Where did they teach you that, grade school, ~ha."  
     },
     
-    // Insults based on Age Group (Key)
+    // Insults based on Age Group (Key)II
     age: {
         "Dinosaur": { //Over 18
             description: "a prehistoric life form. Dinosaur, init? So how was it like seeing the Big Bang? I heard it was a lovely firework show. Were you there to witness the birth of Elizabeth the Second? ",
-            height: {
+            height: { // III
                 "Tall": "After so many years, no wonder you're so lengthy... So how is the weather there, meat? Or are you too tall to the point of reaching the vacuum of space? You don't need a telescope to see the moon, you just need to look up at yourself.",
                 "Short": "So old yet so short. Haven't you eaten your vegetables, eh? When you order an ice cream cone, is it called a soft-serve miniature? You're like a little pocket person—great for when I need something from the bottom shelf of life."
             },
-            pet: {
+            pet: { // IV
                 "None": "Which you don't have. ¬Ha. Of course you don't, meat! Too busy with your old-people thing to keep one, init. You're an old boring person like all of the others. Well... is there really anything for me to say, meat? Oh! Pardon me, my dearest {userName}",
                 "Dog": "Oh, a dog, init? Does it ever mistake your wrinkled hands for a chew toy? I bet the poor thing thinks you're just a really slow-moving, highly-fragile piece of furniture. Bet it pulls you over on your walks, doesn't it?",
                 "Cat": "A cat? Yeah, figures. They only like you because you're warm and sit still for hours, like a fossilized heat pad. It's probably plotting to trip you on the stairs. It judges you, meat! Just like I do.",
@@ -75,8 +92,8 @@ const insultData = {
         }
     }
 }
-
-const listEndings = [  //I...I am Sorry think there is a better way of making this. 
+// Full list of possible endings. The index in this array corresponds to the calculated 'endingID'.
+const listEndings = [  //TODO: Idealy this sort of data would be better stored in json
     "Firth Ending",
     "Bad Ending",
     "Good Ending",
@@ -150,6 +167,12 @@ const listEndings = [  //I...I am Sorry think there is a better way of making th
     "L-N/A-L/H-S/P-Other",
 ]
 
+/*
+* =============================================================================
+*                           == 2. State Variables ==
+* =============================================================================
+*/
+
 let endingID = 0
 let ending = listEndings[0]
 let endingsUnlocked = new Set()
@@ -166,17 +189,21 @@ let toStartOrNotToStart = false
 
 let currentCommand = ''
 let commandHistory = []
-let historyIndex = -1 // -1 means viewing current input
+let historyIndex = -1                                  // -1 means viewing current input
 
 
 let isAwaitingCustomInput = false
-let resolveCustomInput = null // Promise resolve function
-let inputType = 'command' // 'command', 'prompt', or 'confirm'
+let resolveCustomInput = null                          // Promise resolve function
+let inputType = 'command'                              // 'command', 'prompt', or 'confirm'
 let confirmOptions = ['y', 'n']
 
-
 /*
- Appends a line of text to the terminal output.
+* =============================================================================
+*                     == 3. Terminal Utility Functions ==
+* =============================================================================
+*/
+/*
+ appends a line of text to the terminal output.
  'text' The text to display.
  'className' for styling (e.g., 'error').
  */
@@ -185,7 +212,7 @@ function printLine(text, className = '') {
     line.className = 'py-0.5 ' + className
     line.innerHTML = text 
     outputArea.appendChild(line)
-    outputArea.scrollTop = outputArea.scrollHeight
+    outputArea.scrollTop = outputArea.scrollHeight      // Auto-scroll to the bottom
 }
 
 // Updates the display of the current input buffer.
@@ -201,6 +228,7 @@ function awaitCustomInput(message, type) {
         inputType = type
         currentCommand = ''
         
+        // display the prompt message with the focus-text visuals
         if (type === 'prompt') {
             printLine(`<span class="focus-text">[SYSTEM PROMPT]</span> ${message}`, 'focus-text')
         } else if (type === 'confirm') {
@@ -211,131 +239,16 @@ function awaitCustomInput(message, type) {
     })
 }
 
-// Expose custom functions in a more accessible way
+// expose custom functions in a more accessible way
 const commandPrompt = (message) => awaitCustomInput(message, 'prompt')
 const commandConfirm = (message) => awaitCustomInput(message, 'confirm')
 
 
-
-// Executes the main terminal command or resolves custom input.
-function handleExecute() {
-    const input = currentCommand.trim()
-    commandHistory.unshift(input)
-    currentCommand = ''
-    historyIndex = -1 // Reset
-
-    if (isAwaitingCustomInput) {
-        // Handle custom input resolution
-        isAwaitingCustomInput = false
-        
-        if (inputType === 'confirm') {
-            const normalizedInput = input.toLowerCase()
-            // Print input *before* validation/recursion
-            printLine(`> ${input}`) 
-            if (confirmOptions.includes(normalizedInput)) {
-                resolveCustomInput(normalizedInput === 'y')
-            } else {
-                isAwaitingCustomInput = true 
-                printLine('Invalid input. Please enter only "y" or "n".', 'error')
-            }
-        } 
-
-        else if (inputType === 'prompt') {
-            printLine(`> ${input}`)
-            resolveCustomInput(input)
-        }
-        
-        if (!isAwaitingCustomInput) {
-            inputType = 'command'
-        }
-
-    } else {
-        // Handle regular command execution
-        // Using modern prompt prefix
-        printLine(`user@app-sim:~$ ${input}`)
-        executeCommand(input.toLowerCase())
-    }
-
-    updateInputDisplay()
+function isInteger(value) {
+    return value % 1 === 0
 }
 
-// handling known commands. 
-function executeCommand(command) {
-    const parts = command.split(' ')
-    const cmd = parts[0]
-
-    switch (cmd) {
-        case 'help':
-            printLine('Available Commands:')
-            printLine('  <span class="highlight">start</span> - Start the Insulter.')
-            printLine('  <span class="highlight">clear</span> - Clears the terminal history.')
-            printLine('  <span class="highlight">webfetch</span> - Print out the Title.')
-            printLine('  <span class="highlight">help</span> - Shows this list.')
-            break
-        
-        case 'start':
-            runApp()
-            break
-
-        case 'clear':
-            outputArea.innerHTML = ''
-            printLine('Terminal cleared. Type "help" for commands.')
-            break
-
-        case 'webfetch':
-            webfetch()
-            break
-        
-        case '':
-            // Do nothing for empty command
-            break
-
-        default:
-            printLine(`'${cmd}' is not recognized as an internal or external command.`, 'error')
-            break
-    }
-}
-
-
-// --- Keyboard Event Handling ---
-
-document.addEventListener('keydown', (e) => {
-    const key = e.key
-
-    if (key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
-
-        // Regular character input
-        currentCommand += key
-        updateInputDisplay()
-        e.preventDefault()
-    } else if (key === 'Backspace') {
-
-        // Backspace
-        currentCommand = currentCommand.slice(0, -1)
-        updateInputDisplay()
-        e.preventDefault()
-    } else if (key === 'Enter') {
-
-        // Enter key to execute or resolve input
-        handleExecute()
-        e.preventDefault()
-    } else if (key === 'ArrowUp' && commandHistory.length > 0) {
-
-        // Navigate command history up
-        historyIndex = Math.min(historyIndex + 1, commandHistory.length - 1)
-        currentCommand = commandHistory[historyIndex] || ''
-        updateInputDisplay()
-        e.preventDefault()
-    } else if (key === 'ArrowDown' && historyIndex > -1) {
-        
-        // Navigate command history down
-        historyIndex = Math.max(historyIndex - 1, -1)
-        currentCommand = (historyIndex === -1) ? '' : commandHistory[historyIndex]
-        updateInputDisplay()
-        e.preventDefault()
-    }
-})
-
+// Prints large ASCII art title
 function webfetch() {
     printLine(' /$$$$$$                               /$$   /$$                         ', 'title')
     printLine('|_  $$_/                              | $$  | $$                         ', 'title')
@@ -360,15 +273,138 @@ function webfetch() {
 
 }
 
-// Ensure the terminal always receives focus when clicked
+
+/*
+* =============================================================================
+*                     == 3. Terminal Utility Functions ==
+* =============================================================================
+*/
+// terminal commands.
+function executeCommand(command) {
+    const parts = command.split(' ');
+    const cmd = parts[0];
+
+    switch (cmd) {
+        case 'help':
+            printLine('Available Commands:');
+            printLine('  <span class="highlight">start</span> - Start the Insulter.');
+            printLine('  <span class="highlight">clear</span> - Clears the terminal history.');
+            printLine('  <span class="highlight">webfetch</span> - Print out the Title.');
+            printLine('  <span class="highlight">help</span> - Shows this list.');
+            break;
+
+        case 'start':
+            runApp();
+            break;
+
+        case 'clear':
+            outputArea.innerHTML = '';
+            printLine('Terminal cleared. Type "help" for commands.');
+            break;
+
+        case 'webfetch':
+            webfetch();
+            break;
+
+        case '':
+            // Do nothing for empty command
+            break;
+
+        default:
+            printLine(`'${cmd}' is not recognized as an internal or external command.`, 'error');
+            break;
+    }
+}
+
+// the main terminal command or resolves custom input.
+function handleExecute() {
+    const input = currentCommand.trim()
+    commandHistory.unshift(input)
+    currentCommand = ''
+    historyIndex = -1 // Reset
+
+    if (isAwaitingCustomInput) {
+        // handle custom input resolution
+        isAwaitingCustomInput = false
+        
+        if (inputType === 'confirm') {
+            const normalizedInput = input.toLowerCase()
+            // print input *before* validation/recursion
+            printLine(`> ${input}`) 
+            if (confirmOptions.includes(normalizedInput)) {
+                resolveCustomInput(normalizedInput === 'y')
+            } else {
+                isAwaitingCustomInput = true 
+                printLine('Invalid input. Please enter only "y" or "n".', 'error')
+            }
+        } 
+
+        else if (inputType === 'prompt') {
+            printLine(`> ${input}`)
+            resolveCustomInput(input)
+        }
+        
+        if (!isAwaitingCustomInput) {
+            inputType = 'command'
+        }
+
+    } else {
+        // handle regular command execution
+        // using modern prompt prefix
+        printLine(`user@app-sim:~$ ${input}`)
+        executeCommand(input.toLowerCase())
+    }
+
+    updateInputDisplay()
+}
+
+
+// ---input event handling ---
+document.addEventListener('keydown', (e) => {
+    const key = e.key
+
+    if (key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+
+        // character input
+        currentCommand += key
+        updateInputDisplay()
+        e.preventDefault()
+    } else if (key === 'Backspace') {
+
+        // backspace
+        currentCommand = currentCommand.slice(0, -1)
+        updateInputDisplay()
+        e.preventDefault()
+    } else if (key === 'Enter') {
+
+        // enter key
+        handleExecute()
+        e.preventDefault()
+    } else if (key === 'ArrowUp' && commandHistory.length > 0) {
+
+        // command history up
+        historyIndex = Math.min(historyIndex + 1, commandHistory.length - 1)
+        currentCommand = commandHistory[historyIndex] || ''
+        updateInputDisplay()
+        e.preventDefault()
+    } else if (key === 'ArrowDown' && historyIndex > -1) {
+        
+        // command history down
+        historyIndex = Math.max(historyIndex - 1, -1)
+        currentCommand = (historyIndex === -1) ? '' : commandHistory[historyIndex]
+        updateInputDisplay()
+        e.preventDefault()
+    }
+})
+
+
+// terminal always receives focus when clicked
 document.getElementById('terminal').addEventListener('click', () => {
     document.body.focus()
 })
 
 
-
 // --- Initialization ---
-
 window.onload = () => {
     // Focus the document body to immediately enable keyboard input
     document.body.focus()
@@ -378,12 +414,14 @@ window.onload = () => {
 }
 
 
-function isInteger(value) {
-    return value % 1 === 0
-}
+/*
+* =============================================================================
+*                     == 5. User Data Collection Functions ==
+* =============================================================================
+*/
 
-
-async function gettingBasicInfo() {
+//Gets name and age
+async function gettingBasicInfo() { 
 
     while (true) {
         userName = await commandPrompt('What is your name?')
@@ -396,7 +434,7 @@ async function gettingBasicInfo() {
         }
     }
 
-    if (userName !== userName.toUpperCase()) { //Cheking if the name is spelled with a upper case
+    if (userName[0] !== userName[0].toUpperCase()) { //Cheking if the name is spelled with a upper case
         userIlliterate = true
     } else {
         userIlliterate = false
@@ -432,11 +470,13 @@ async function gettingBasicInfo() {
 async function gettingHeight() {
 
     while (true) {
+        // Generate the list of options dynamically
         let heightInput = await commandPrompt('Are you: \n' + height.map((TS, i) => `${i + 1}: ${TS}`).join('\n'))
         // Okay this one needs an explonations: Question, new line, list though the array: array number(i+1, cuz it starts at zero):[pet]. new line.
 
         userHeight = Number(heightInput)
 
+        // Validate input: is a number, is 1 or 2, is an integer, and not empty
         if (!isNaN(userHeight) && userHeight >= 1 && userHeight <= 2  && heightInput.trim() !== "" && isInteger(userHeight)) {
             if  (userHeight == 1) {
                 userHeight = "Short"
@@ -460,9 +500,11 @@ async function gettingPet() {
     userHasPet = await commandConfirm("Do have a pet?")
     if (userHasPet == true) {
         while (true) {
+            // Generate the list of options dynamically
             let petInput = await commandPrompt("What pet do you have \n" + petTypes.map((pet, i) => `${i + 1}: ${pet}`).join("\n"))
             let petIndex = Number(petInput) 
 
+            // Validate input: is a number, is a valid index, and is an integer
             if (!isNaN(petIndex) && petIndex >= 1 && petIndex <= petTypes.length && petInput.trim() !== "" && isInteger(petIndex)) {
 
                 userPetType = petTypes[petIndex - 1] 
@@ -473,10 +515,16 @@ async function gettingPet() {
             }
         }
     }
+    // If user confirmed 'n' or didn't select a pet, default to 'None'
     userPetType = "None" 
     return userPetType
 }
 
+/*
+* =============================================================================
+*                     == 6. Insult and Ending Logic ==
+* =============================================================================
+*/
 
 function findingEndings() { //hard function had to put my smart hat for this!!! わわわあああ！やば、これを作るには考えなければならなかった。
     //Функция кодирует сложную комбинацию пользовательских данных в одно число, которое соответствует уникальной концовке истории/сценария.
@@ -552,7 +600,15 @@ async function makingInsult() {
     }
 }
 
-
+/**
+ * put everything to togther 
+ * @param {string} userName - user's name.
+ * @param {string} literate - literacy insult segment see I.
+ * @param {string} ageInsult - age group insult segment II.
+ * @param {string} heightInsult - Height insult segment III.
+ * @param {string} petInsult - pet type insult segment IV.
+ * @returns {string} The final paragraph.
+ */
 function paragraphTemplate(userName, literate, ageInsult, heightInsult, userName, petInsult) {
     let endingNumber = endingID + 1
     const templates = [
